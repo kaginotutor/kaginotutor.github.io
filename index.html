@@ -37,7 +37,7 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 2px; /* 進一步減少平假名之間的間隔 */
+            gap: 1px; /* 進一步減少平假名之間的間隔 */
         }
         #control-panel {
             margin: 20px;
@@ -108,7 +108,7 @@
     </style>
 </head>
 <body>
-    <h1>平假名強迫學習器</h1>
+    <h1 id="main-title">平假名強迫學習器</h1>
     <div id="character-display"></div>
     <div id="control-panel">
         <div>
@@ -187,6 +187,7 @@
         const delayInput = document.getElementById('delay-input');
         const nextDelayInput = document.getElementById('next-delay-input');
         const numButtons = document.querySelectorAll('.num-select-buttons button');
+        const mainTitle = document.getElementById('main-title');
 
         let intervalId;
         let playing = false;
@@ -201,6 +202,7 @@
 
         function startLearning() {
             startButton.textContent = '結束';
+            mainTitle.style.display = 'none';
             characterDisplayDiv.classList.add('enlarged-kanji');
             playing = true;
             displayRandomWords();
@@ -208,6 +210,7 @@
 
         function stopLearning() {
             startButton.textContent = '開始';
+            mainTitle.style.display = 'block';
             clearInterval(intervalId);
             currentAudioElements.forEach(audio => audio.pause());
             currentAudioElements = [];
