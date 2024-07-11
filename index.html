@@ -194,7 +194,7 @@
 
         numButtons.forEach(button => {
             button.addEventListener('click', () => {
-                stopLearning();
+                if (playing) stopLearning();
             });
         });
 
@@ -278,9 +278,12 @@
             }
         });
 
-        document.addEventListener('keydown', stopLearning);
+        document.addEventListener('keydown', (event) => {
+            if (playing) stopLearning();
+        });
+
         document.addEventListener('click', (event) => {
-            if (event.target !== startButton) {
+            if (playing && event.target !== startButton) {
                 stopLearning();
             }
         });
