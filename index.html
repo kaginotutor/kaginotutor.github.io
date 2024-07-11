@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiragana Learner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .character-container {
+            display: inline-block;
+            text-align: center;
+            margin: 10px;
+            width: 80px;
+            height: 120px;
+            vertical-align: top;
+        }
+        .hiragana {
+            font-size: 2em;
+            line-height: 80px;
+            transition: transform 0.3s;
+        }
+        .romanized {
+            font-size: 1em;
+            margin-top: 5px;
+            line-height: 20px;
+        }
+        #character-display {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        #control-panel {
+            margin: 20px;
+        }
+        #start-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #delay-input, #next-delay-input {
+            margin: 20px;
+        }
+        .enlarged-kanji {
+            transform: scale(2);
+        }
+        .num-select-buttons {
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .num-select-buttons button {
+            padding: 10px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .num-select-buttons button:hover {
+            background-color: #e0e0e0;
+        }
+        .active-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .description {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 600px) {
+            .character-container {
+                width: 60px;
+                height: 100px;
+            }
+            .hiragana {
+                font-size: 1.5em;
+                line-height: 60px;
+            }
+            .romanized {
+                font-size: 0.8em;
+                line-height: 16px;
+            }
+            #start-button {
+                padding: 8px 16px;
+                font-size: 0.8em;
+            }
+            .num-select-buttons button {
+                padding: 8px 12px;
+                margin: 0 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="character-display"></div>
+    <div id="control-panel">
+        <label for="delay-input">發音延遲秒數: </label>
+        <input type="number" id="delay-input" value="3" min="1" max="10">
+        <br>
+        <label for="next-delay-input">單字延遲秒數: </label>
+        <input type="number" id="next-delay-input" value="2" min="1" max="10">
+        <br>
+        <div class="description">同時顯示字數</div>
+        <div class="num-select-buttons">
+            <button id="num-1" class="active-button">1</button>
+            <button id="num-2">2</button>
+            <button id="num-3">3</button>
+            <button id="num-4">4</button>
+            <button id="num-5">5</button>
+        </div>
+    </div>
+    <button id="start-button">開始</button>
+    <script>
+        let words = [
+            { hiragana: 'あ', audio: 'audio/a-ex.wav', romanized: 'a' },
+            { hiragana: 'い', audio: 'audio/i-ex.wav', romanized: 'i' },
+            { hiragana: 'う', audio: 'audio/u-ex.wav', romanized: 'u' },
+            { hiragana: 'え', audio: 'audio/e-ex.wav', romanized: 'e' },
+            { hiragana: 'お', audio: 'audio/o-ex.wav', romanized: 'o' },
+            { hiragana: 'か', audio: 'audio/ka-ex.wav', romanized: 'ka' },
+            { hiragana: 'き', audio: 'audio/ki-ex.wav', romanized: 'ki' },
+            { hiragana: 'く', audio: 'audio/ku-ex.wav', romanized: 'ku' },
+            { hiragana: 'け', audio: 'audio/ke-ex.wav', romanized: 'ke' },
+            { hiragana: 'こ', audio: 'audio/ko-ex.wav', romanized: 'ko' },
+            { hiragana: 'さ', audio: 'audio/sa-ex.wav', romanized: 'sa' },
+            { hiragana: 'し', audio: 'audio/shi-ex.wav', romanized: 'shi' },
+            { hiragana: 'す', audio: 'audio/su-ex.wav', romanized: 'su' },
+            { hiragana: 'せ', audio: 'audio/se-ex.wav', romanized: 'se' },
+            { hiragana: 'そ', audio: 'audio/so-ex.wav', romanized: 'so' },
+            { hiragana: 'た', audio: 'audio/ta-ex.wav', romanized: 'ta' },
+            { hiragana: 'ち', audio: 'audio/chi-ex.wav', romanized: 'chi' },
+            { hiragana: 'つ', audio: 'audio/tsu-ex.wav', romanized: 'tsu' },
+            { hiragana: 'て', audio: 'audio/te-ex.wav', romanized: 'te' },
+            { hiragana: 'と', audio: 'audio/to-ex.wav', romanized: 'to' },
+            { hiragana: 'な', audio: 'audio/na-ex.wav', romanized: 'na' },
+            { hiragana: 'に', audio: 'audio/ni-ex.wav', romanized: 'ni' },
+            { hiragana: 'ぬ', audio: 'audio/nu-ex.wav', romanized: 'nu' },
+            { hiragana: 'ね', audio: 'audio/ne-ex.wav', romanized: 'ne' },
+            { hiragana: 'の', audio: 'audio/no-ex.wav', romanized: 'no' },
+            { hiragana: 'は', audio: 'audio/ha-ex.wav', romanized: 'ha' },
+            { hiragana: 'ひ', audio: 'audio/hi-ex.wav', romanized: 'hi' },
+            { hiragana: 'ふ', audio: 'audio/fu-ex.wav', romanized: 'fu' },
+            { hiragana: 'へ', audio: 'audio/he-ex.wav', romanized: 'he' },
+            { hiragana: 'ほ', audio: 'audio/ho-ex.wav', romanized: 'ho' },
+            { hiragana: 'ま', audio: 'audio/ma-ex.wav', romanized: 'ma' },
+            { hiragana: 'み', audio: 'audio/mi-ex.wav', romanized: 'mi' },
+            { hiragana: 'む', audio: 'audio/mu-ex.wav', romanized: 'mu' },
+            { hiragana: 'め', audio: 'audio/me-ex.wav', romanized: 'me' },
+            { hiragana: 'も', audio: 'audio/mo-ex.wav', romanized: 'mo' },
+            { hiragana: 'や', audio: 'audio/ya-ex.wav', romanized: 'ya' },
+            { hiragana: 'ゆ', audio: 'audio/yu-ex.wav', romanized: 'yu' },
+            { hiragana: 'よ', audio: 'audio/yo-ex.wav', romanized: 'yo' },
+            { hiragana: 'ら', audio: 'audio/ra-ex.wav', romanized: 'ra' },
+            { hiragana: 'り', audio: 'audio/ri-ex.wav', romanized: 'ri' },
+            { hiragana: 'る', audio: 'audio/ru-ex.wav', romanized: 'ru' },
+            { hiragana: 'れ', audio: 'audio/re-ex.wav', romanized: 're' },
+            { hiragana: 'ろ', audio: 'audio/ro-ex.wav', romanized: 'ro' },
+            { hiragana: 'わ', audio: 'audio/wa-ex.wav', romanized: 'wa' },
+            { hiragana: 'を', audio: 'audio/wo-ex.wav', romanized: 'wo' },
+            { hiragana: 'ん', audio: 'audio/n-ex.wav', romanized: 'n' }
+        ];
+
+        let numHiragana = 1;
+        let currentAudioElements = [];
+
+        const startButton = document.getElementById('start-button');
+        const characterDisplayDiv = document.getElementById('character-display');
+        const delayInput = document.getElementById('delay-input');
+        const nextDelayInput = document.getElementById('next-delay-input');
+        const numButtons = document.querySelectorAll('.num-select-buttons button');
+
+        let intervalId;
+        let playing = false;
+
+        numButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                numButtons.forEach(btn => btn.classList.remove('active-button'));
+                button.classList.add('active-button');
+                numHiragana = parseInt(button.textContent);
+            });
+        });
+
+        function startLearning() {
+            startButton.textContent = '結束';
+            characterDisplayDiv.classList.add('enlarged-kanji');
+            playing = true;
+            displayRandomWords();
+        }
+
+        function stopLearning() {
+            startButton.textContent = '開始';
+            clearInterval(intervalId);
+            currentAudioElements.forEach(audio => audio.pause());
+            currentAudioElements = [];
+            characterDisplayDiv.innerHTML = '';
+            characterDisplayDiv.classList.remove('enlarged-kanji');
+            playing = false;
+        }
+
+        function displayRandomWords() {
+            if (!playing) return;
+
+            const selectedWords = [];
+            while (selectedWords.length < numHiragana) {
+                const randomIndex = Math.floor(Math.random() * words.length);
+                const selectedWord = words[randomIndex];
+                if (!selectedWords.includes(selectedWord)) {
+                    selectedWords.push(selectedWord);
+                }
+            }
+
+            characterDisplayDiv.innerHTML = '';
+            selectedWords.forEach(word => {
+                const characterContainer = document.createElement('div');
+                characterContainer.classList.add('character-container');
+                
+                const hiraganaDiv = document.createElement('div');
+                hiraganaDiv.classList.add('hiragana');
+                hiraganaDiv.textContent = word.hiragana;
+                
+                const romanizedDiv = document.createElement('div');
+                romanizedDiv.classList.add('romanized');
+                
+                characterContainer.appendChild(hiraganaDiv);
+                characterContainer.appendChild(romanizedDiv);
+                characterDisplayDiv.appendChild(characterContainer);
+            });
+
+            const delay = parseInt(delayInput.value) * 1000;
+            setTimeout(() => {
+                if (!playing) return;
+
+                selectedWords.forEach((word, index) => {
+                    setTimeout(() => {
+                        if (!playing) return;
+
+                        const characterContainer = characterDisplayDiv.children[index];
+                        const romanizedDiv = characterContainer.querySelector('.romanized');
+                        romanizedDiv.textContent = word.romanized;
+                        const audio = new Audio(word.audio);
+                        audio.play();
+                        currentAudioElements.push(audio);
+                    }, index * 1000);
+                });
+
+                const totalAudioDuration = selectedWords.length * 1000;
+                const nextDelay = parseInt(nextDelayInput.value) * 1000;
+
+                intervalId = setTimeout(displayRandomWords, totalAudioDuration + nextDelay);
+            }, delay);
+        }
+
+        startButton.addEventListener('click', () => {
+            if (startButton.textContent === '開始') {
+                startLearning();
+            } else {
+                stopLearning();
+            }
+        });
+    </script>
+</body>
+</html>
