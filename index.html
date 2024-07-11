@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>平假名無腦學習器</title>
+    <title>平假名強迫學習器</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +18,7 @@
         .character-container {
             display: inline-block;
             text-align: center;
-            margin: 1px; /* 進一步減少平假名之間的間隔 */
+            margin: 1px;
             width: 50px;
             height: 80px;
             vertical-align: top;
@@ -30,14 +30,14 @@
         }
         .romanized {
             font-size: 0.8em;
-            margin-top: 2px; /* 進一步減少平假名與羅馬拼音之間的間隔 */
+            margin-top: 2px;
             line-height: 16px;
         }
         #character-display {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 1px; /* 進一步減少平假名之間的間隔 */
+            gap: 1px;
         }
         #control-panel {
             margin: 20px;
@@ -49,7 +49,7 @@
             margin-top: 20px;
         }
         #delay-input, #next-delay-input {
-            margin: 10px; /* 調整間距 */
+            margin: 10px;
         }
         .enlarged-kanji {
             transform: scale(2);
@@ -82,7 +82,7 @@
             .character-container {
                 width: 40px;
                 height: 60px;
-                margin: 1px; /* 進一步減少間隔 */
+                margin: 1px;
             }
             .hiragana {
                 font-size: 1.2em;
@@ -90,7 +90,7 @@
             }
             .romanized {
                 font-size: 0.6em;
-                margin-top: 1px; /* 進一步減少平假名與羅馬拼音之間的間隔 */
+                margin-top: 1px;
                 line-height: 12px;
             }
             #start-button {
@@ -108,7 +108,7 @@
     </style>
 </head>
 <body>
-    <h1 id="main-title">平假名無腦學習器</h1>
+    <h1 id="main-title">平假名強迫學習器</h1>
     <div id="character-display"></div>
     <div id="control-panel">
         <div>
@@ -194,9 +194,7 @@
 
         numButtons.forEach(button => {
             button.addEventListener('click', () => {
-                numButtons.forEach(btn => btn.classList.remove('active-button'));
-                button.classList.add('active-button');
-                numHiragana = parseInt(button.textContent);
+                stopLearning();
             });
         });
 
@@ -276,6 +274,13 @@
             if (startButton.textContent === '開始') {
                 startLearning();
             } else {
+                stopLearning();
+            }
+        });
+
+        document.addEventListener('keydown', stopLearning);
+        document.addEventListener('click', (event) => {
+            if (event.target !== startButton) {
                 stopLearning();
             }
         });
