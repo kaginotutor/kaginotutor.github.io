@@ -49,7 +49,7 @@
             margin-top: 20px;
         }
         #delay-input, #next-delay-input {
-            margin: 20px 20px 40px 20px; /* 增加下方的間距 */
+            margin: 10px; /* 調整間距 */
         }
         .enlarged-kanji {
             transform: scale(2);
@@ -110,12 +110,14 @@
     <h1>平假名強迫學習器</h1>
     <div id="character-display"></div>
     <div id="control-panel">
-        <label for="delay-input">發音延遲秒數: </label>
-        <input type="number" id="delay-input" value="3" min="1" max="10">
-        <br>
-        <label for="next-delay-input">每組間隔秒數: </label>
-        <input type="number" id="next-delay-input" value="2" min="1" max="10">
-        <br>
+        <div>
+            <label for="delay-input">發音延遲秒數: </label>
+            <input type="number" id="delay-input" value="3" min="1" max="10">
+        </div>
+        <div>
+            <label for="next-delay-input">每組間隔秒數: </label>
+            <input type="number" id="next-delay-input" value="2" min="1" max="10">
+        </div>
         <div class="description">同時顯示字數</div>
         <div class="num-select-buttons">
             <button id="num-1" class="active-button">1</button>
