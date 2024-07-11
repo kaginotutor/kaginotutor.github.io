@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>平假名學習器</title>
+    <title>平假名強迫學習器</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,23 +40,23 @@
             gap: 5px;
         }
         #control-panel {
-            margin: 10px;
+            margin: 20px;
         }
         #start-button {
             padding: 8px 16px;
             font-size: 1em;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 20px;
         }
         #delay-input, #next-delay-input {
-            margin: 10px;
+            margin: 20px 20px 40px 20px; /* 增加下方的間距 */
         }
         .enlarged-kanji {
             transform: scale(2);
         }
         .num-select-buttons {
             display: inline-block;
-            margin: 5px 0;
+            margin: 10px 0;
         }
         .num-select-buttons button {
             padding: 8px 12px;
@@ -82,6 +82,7 @@
             .character-container {
                 width: 40px;
                 height: 60px;
+                margin: 1px; /* 進一步減少間隔 */
             }
             .hiragana {
                 font-size: 1.2em;
