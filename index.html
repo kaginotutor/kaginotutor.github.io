@@ -18,7 +18,7 @@
         .character-container {
             display: inline-block;
             text-align: center;
-            margin: 1px;
+            margin: 1px; /* 進一步減少平假名之間的間隔 */
             width: 50px;
             height: 80px;
             vertical-align: top;
@@ -30,14 +30,14 @@
         }
         .romanized {
             font-size: 0.8em;
-            margin-top: 2px;
+            margin-top: 2px; /* 進一步減少平假名與羅馬拼音之間的間隔 */
             line-height: 16px;
         }
         #character-display {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 1px;
+            gap: 1px; /* 進一步減少平假名之間的間隔 */
         }
         #control-panel {
             margin: 20px;
@@ -49,7 +49,7 @@
             margin-top: 20px;
         }
         #delay-input, #next-delay-input {
-            margin: 10px;
+            margin: 10px; /* 調整間距 */
         }
         .enlarged-kanji {
             transform: scale(2);
@@ -82,7 +82,7 @@
             .character-container {
                 width: 40px;
                 height: 60px;
-                margin: 1px;
+                margin: 1px; /* 進一步減少間隔 */
             }
             .hiragana {
                 font-size: 1.2em;
@@ -90,7 +90,7 @@
             }
             .romanized {
                 font-size: 0.6em;
-                margin-top: 1px;
+                margin-top: 1px; /* 進一步減少平假名與羅馬拼音之間的間隔 */
                 line-height: 12px;
             }
             #start-button {
@@ -194,7 +194,9 @@
 
         numButtons.forEach(button => {
             button.addEventListener('click', () => {
-                if (playing) stopLearning();
+                numButtons.forEach(btn => btn.classList.remove('active-button'));
+                button.classList.add('active-button');
+                numHiragana = parseInt(button.textContent);
             });
         });
 
@@ -274,16 +276,6 @@
             if (startButton.textContent === '開始') {
                 startLearning();
             } else {
-                stopLearning();
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (playing) stopLearning();
-        });
-
-        document.addEventListener('click', (event) => {
-            if (playing && event.target !== startButton) {
                 stopLearning();
             }
         });
