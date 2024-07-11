@@ -260,7 +260,12 @@
                         const romanizedDiv = characterContainer.querySelector('.romanized');
                         romanizedDiv.textContent = word.romanized;
                         const audio = new Audio(word.audio);
-                        audio.play();
+                        audio.addEventListener('ended', () => {
+                            document.body.removeEventListener('touchstart', playAudio);
+                        });
+                        document.body.addEventListener('touchstart', playAudio = () => {
+                            audio.play();
+                        });
                         currentAudioElements.push(audio);
                     }, index * 1000);
                 });
@@ -276,6 +281,16 @@
             if (startButton.textContent === '開始') {
                 startLearning();
             } else {
+                stopLearning();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (playing) stopLearning();
+        });
+
+        document.addEventListener('click', (event) => {
+            if (playing && event.target !== startButton) {
                 stopLearning();
             }
         });
