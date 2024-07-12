@@ -101,6 +101,11 @@
             background-color: #218838;
             transform: scale(1.05);
         }
+        #counter {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -110,22 +115,25 @@
             <div id="hiragana-pronunciation"></div>
         </div>
         <div id="control-panel">
-            <label for="delay-input">發音延遲秒數: </label>
+            <label for="delay-input">標音延遲秒數: </label>
             <input type="number" id="delay-input" value="3" min="1" max="10">
             <button id="next-button" disabled>下一個</button>
             <br>
-            <label for="next-delay-input">單字延遲秒數: </label>
+            <label for="next-delay-input">換字間隔秒數: </label>
             <input type="number" id="next-delay-input" value="2" min="1" max="10">
             <button id="auto-button" disabled>全自動</button>
             <br>
             <input type="file" id="file-input" accept=".xlsx">
         </div>
         <button id="start-button" disabled>開始</button>
+        <div id="counter">已出現 0 字，共 0 個 字</div>
         <a id="download-button" href="example.xlsx" download>下載範例資料庫</a>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
     <script>
         let words = [];
+        let usedWords = [];
+        let counter = 0;
 
         const fileInput = document.getElementById('file-input');
         const startButton = document.getElementById('start-button');
@@ -135,6 +143,7 @@
         const hiraganaPronunciationDiv = document.getElementById('hiragana-pronunciation');
         const delayInput = document.getElementById('delay-input');
         const nextDelayInput = document.getElementById('next-delay-input');
+        const counterDiv = document.getElementById('counter');
 
         let autoIntervalId;
 
@@ -159,6 +168,7 @@
                     nextButton.disabled = false;
                     autoButton.disabled = false;
                 }
+                updateCounter(); // 更新總數
             };
 
             reader.readAsArrayBuffer(file);
@@ -167,6 +177,9 @@
         function startLearning() {
             startButton.textContent = '結束';
             fileInput.disabled = true;
+            usedWords = [];
+            counter = 0;
+            updateCounter();
             japaneseCharacterDiv.classList.add('enlarged-kanji');
             hiraganaPronunciationDiv.classList.add('enlarged-hiragana');
             displayRandomWord();
@@ -183,8 +196,23 @@
         }
 
         function displayRandomWord() {
-            const randomIndex = Math.floor(Math.random() * words.length);
-            const selectedWord = words[randomIndex];
+            if (usedWords.length === words.length) {
+                alert('所有 Kanji 都已使用過');
+                stopLearning();
+                return;
+            }
+
+            let randomIndex;
+            let selectedWord;
+
+            do {
+                randomIndex = Math.floor(Math.random() * words.length);
+                selectedWord = words[randomIndex];
+            } while (usedWords.includes(selectedWord));
+
+            usedWords.push(selectedWord);
+            counter++;
+            updateCounter();
 
             japaneseCharacterDiv.textContent = selectedWord.kanji;
             hiraganaPronunciationDiv.textContent = '';
@@ -193,6 +221,10 @@
             setTimeout(() => {
                 hiraganaPronunciationDiv.textContent = selectedWord.hiragana;
             }, delay);
+        }
+
+        function updateCounter() {
+            counterDiv.textContent = `已出現 ${counter} 字，共 ${words.length} 字`;
         }
 
         function startAutoMode() {
