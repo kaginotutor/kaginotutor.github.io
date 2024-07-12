@@ -25,6 +25,12 @@
             width: 80%;
             max-width: 600px;
         }
+        #display-area {
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
         #japanese-character {
             font-size: 2.5em;
             margin: 20px 0;
@@ -69,6 +75,10 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+        input[type="file"]:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
         label {
             font-size: 1em;
             margin-right: 10px;
@@ -95,8 +105,10 @@
 </head>
 <body>
     <div id="container">
-        <div id="japanese-character"></div>
-        <div id="hiragana-pronunciation"></div>
+        <div id="display-area">
+            <div id="japanese-character"></div>
+            <div id="hiragana-pronunciation"></div>
+        </div>
         <div id="control-panel">
             <label for="delay-input">發音延遲秒數: </label>
             <input type="number" id="delay-input" value="3" min="1" max="10">
@@ -154,6 +166,7 @@
 
         function startLearning() {
             startButton.textContent = '結束';
+            fileInput.disabled = true;
             japaneseCharacterDiv.classList.add('enlarged-kanji');
             hiraganaPronunciationDiv.classList.add('enlarged-hiragana');
             displayRandomWord();
@@ -161,6 +174,7 @@
 
         function stopLearning() {
             startButton.textContent = '開始';
+            fileInput.disabled = false;
             clearInterval(autoIntervalId);
             japaneseCharacterDiv.textContent = '';
             hiraganaPronunciationDiv.textContent = '';
